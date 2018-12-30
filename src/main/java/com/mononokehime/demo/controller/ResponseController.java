@@ -45,8 +45,6 @@ public class ResponseController {
 
 
         sb.append("Request Context = [" + request.getContextPath() + "], \n");
-        sb.append("Request servlet mapping pattern = [" + request.getHttpServletMapping().getPattern() + "],  \n");
-        sb.append("Request servlet name = [" + request.getHttpServletMapping().getServletName() + "],  \n");
         sb.append("Request path info = [" + request.getPathInfo() + "],  \n");
         sb.append("Request query string = [" + request.getQueryString() + "],  \n");
         sb.append("Request remote user = [" + request.getRemoteUser() + "],  \n");
