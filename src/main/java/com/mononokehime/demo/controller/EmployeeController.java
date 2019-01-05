@@ -1,12 +1,14 @@
 package com.mononokehime.demo.controller;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.mononokehime.demo.data.Employee;
 import com.mononokehime.demo.data.EmployeeNotFoundException;
+import com.mononokehime.demo.data.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -18,10 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.mononokehime.demo.data.EmployeeRepository;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @RestController
@@ -33,7 +31,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeResourceAssembler assembler;
 
-//    public EmployeeController(EmployeeRepository repository,
+    //    public EmployeeController(EmployeeRepository repository,
 //                       EmployeeResourceAssembler assembler) {
 //
 //        this.repository = repository;
@@ -41,21 +39,21 @@ public class EmployeeController {
 //    }
     // Aggregate root
     @GetMapping("/employees")
-    Resources<Resource<Employee>> all() {
+    public final Resources<Resource<Employee>> all() {
 
-        System.out.println("***************"+repository.findAll().size());
+        System.out.println("***************" + repository.findAll().size());
 
         List<Resource<Employee>> employees = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
-        System.out.println("***************"+employees);
+        System.out.println("***************" + employees);
 
         return new Resources<>(employees,
                 linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
 
     @PostMapping("/employees")
-    ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
+    public final ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
 
         Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
 
@@ -66,7 +64,7 @@ public class EmployeeController {
 
     // Single item
     @GetMapping("/employees/{id}")
-    Resource<Employee> one(@PathVariable Long id) {
+    public final Resource<Employee> one(@PathVariable Long id) {
 
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
@@ -75,7 +73,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
+    public final ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
 
         Employee updatedEmployee = repository.findById(id)
                 .map(employee -> {
@@ -96,7 +94,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    public final ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
 
         repository.deleteById(id);
 

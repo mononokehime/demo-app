@@ -1,11 +1,7 @@
 package com.mononokehime.demo.controller;
 
-import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -14,9 +10,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -25,7 +23,7 @@ public class ResponseController {
 
 
     @GetMapping("/headers")
-    Resource  customHeader(HttpServletRequest request, @RequestHeader HttpHeaders headers) throws SocketException {
+    Resource customHeader(HttpServletRequest request, @RequestHeader HttpHeaders headers) throws SocketException {
         final String response = httpServletRequestToString(request);
         return new Resource(response,
                 linkTo(methodOn(ResponseController.class).customHeader(request, headers)).withSelfRel());
@@ -61,32 +59,30 @@ public class ResponseController {
 
 
         final Enumeration e = NetworkInterface.getNetworkInterfaces();
-        while(e.hasMoreElements())
-        {
+        while (e.hasMoreElements()) {
             NetworkInterface n = (NetworkInterface) e.nextElement();
             Enumeration ee = n.getInetAddresses();
-            while (ee.hasMoreElements())
-            {
+            while (ee.hasMoreElements()) {
                 InetAddress i = (InetAddress) ee.nextElement();
-                sb.append("Network address: "+i.getHostAddress()+"\n");
+                sb.append("Network address: " + i.getHostAddress() + "\n");
                 //System.out.println(i.getHostAddress());
             }
         }
 
         final String headers =
                 Collections.list(request.getHeaderNames()).stream()
-                        .map(headerName -> headerName + " : " + Collections.list(request.getHeaders(headerName)) )
+                        .map(headerName -> headerName + " : " + Collections.list(request.getHeaders(headerName)))
                         .collect(Collectors.joining(", "));
 
         if (headers.isEmpty()) {
             sb.append("Request headers: NONE,");
         } else {
-            sb.append("Request headers: ["+headers+"],  \n");
+            sb.append("Request headers: [" + headers + "],  \n");
         }
 
         final String parameters =
                 Collections.list(request.getParameterNames()).stream()
-                        .map(p -> p + " : " + Arrays.asList( request.getParameterValues(p)) )
+                        .map(p -> p + " : " + Arrays.asList(request.getParameterValues(p)))
                         .collect(Collectors.joining(", "));
 
         if (parameters.isEmpty()) {

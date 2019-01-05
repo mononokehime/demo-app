@@ -1,7 +1,7 @@
 package com.mononokehime.demo.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import com.mononokehime.demo.data.Employee;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;

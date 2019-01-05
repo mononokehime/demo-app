@@ -1,5 +1,7 @@
 # intellij project files
 *.iml
+pom.xml.bak
+target
 
 # Composer files
 composer.phar

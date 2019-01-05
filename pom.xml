@@ -31,11 +31,22 @@
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
   <properties>
+    <dependency-check-maven.version>4.0.1</dependency-check-maven.version>
+    <gitlog-maven-plugin.version>1.13.12</gitlog-maven-plugin.version>
     <java.version>1.8</java.version>
+    <license-maven-plugin.version>1.16</license-maven-plugin.version>
+    <maven-changelog-plugin.version>2.3</maven-changelog-plugin.version>
+    <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+    <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+    <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
+    <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+    <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
+    <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+    <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
     <maven-surefire-report-plugin.version>2.22.0</maven-surefire-report-plugin.version>
+    <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
     <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
-    <gitlog-maven-plugin.version>1.13.12</gitlog-maven-plugin.version>
   </properties>
   <!-- unused in this project
     <issueManagement>
@@ -107,6 +118,15 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>${maven-project-info-reports-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <!-- these plugins are used when a build runs -->
     <plugins>
       <plugin>
@@ -165,6 +185,29 @@
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
+      </plugin>
+      <!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html generates checkstyle report in the site -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven-checkstyle-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <linkXRef>false</linkXRef>
+              <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+              <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -342,7 +385,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>${maven-project-info-reports-plugin.version}</version>
             <reportSets>
               <reportSet>
                 <reports>
@@ -404,6 +446,18 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>${maven-checkstyle-plugin.version}</version>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>checkstyle</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+            <configuration>
+              <configLocation>src/main/checks/google_checkstyle.xml</configLocation>
+              <failOnViolation>false</failOnViolation>
+              <enableFilesSummary>false</enableFilesSummary>
+            </configuration>
           </plugin>
           <!-- https://maven.apache.org/jxr/maven-jxr-plugin/usage.html allows linking inside the site generation-->
           <plugin>
