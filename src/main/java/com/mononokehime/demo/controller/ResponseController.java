@@ -1,5 +1,30 @@
 package com.mononokehime.demo.controller;
 
+/*-
+ * #%L
+ * Demo Spring Boot Application
+ * %%
+ * Copyright (C) 2018 - 2019 Monononoke Organization
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
+
+
+
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +48,7 @@ public class ResponseController {
 
 
     @GetMapping("/headers")
-    Resource customHeader(HttpServletRequest request, @RequestHeader HttpHeaders headers) throws SocketException {
+    public final Resource customHeader(final HttpServletRequest request, @RequestHeader final HttpHeaders headers) throws SocketException {
         final String response = httpServletRequestToString(request);
         return new Resource(response,
                 linkTo(methodOn(ResponseController.class).customHeader(request, headers)).withSelfRel());
@@ -33,12 +58,12 @@ public class ResponseController {
     }
 
     @GetMapping("/version")
-    Resource version(@RequestHeader HttpHeaders headers) throws SocketException {
+    public final  Resource version(@RequestHeader final HttpHeaders headers) throws SocketException {
         return new Resource(version,
                 linkTo(methodOn(ResponseController.class).version(headers)).withSelfRel());
     }
 
-    private String httpServletRequestToString(HttpServletRequest request) throws SocketException {
+    private String httpServletRequestToString(final HttpServletRequest request) throws SocketException {
         final StringBuilder sb = new StringBuilder();
 
 
@@ -60,10 +85,10 @@ public class ResponseController {
 
         final Enumeration e = NetworkInterface.getNetworkInterfaces();
         while (e.hasMoreElements()) {
-            NetworkInterface n = (NetworkInterface) e.nextElement();
-            Enumeration ee = n.getInetAddresses();
-            while (ee.hasMoreElements()) {
-                InetAddress i = (InetAddress) ee.nextElement();
+            final NetworkInterface networkInterface = (NetworkInterface) e.nextElement();
+            final Enumeration enumeration = networkInterface.getInetAddresses();
+            while (enumeration.hasMoreElements()) {
+                final InetAddress i = (InetAddress) enumeration.nextElement();
                 sb.append("Network address: " + i.getHostAddress() + "\n");
                 //System.out.println(i.getHostAddress());
             }

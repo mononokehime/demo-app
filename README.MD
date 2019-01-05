@@ -18,6 +18,12 @@ Usage
 # mvn clean spring-boot:run
 # http://localhost:8000/swagger-ui.html
 
+Employee
+
+mvn clean resources:resources site install -P reporting
+
+mvn license:remove-file-header
+
 
 curl -v localhost:8000/actuator/health
 curl -v localhost:8000/actuator/info

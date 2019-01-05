@@ -1,5 +1,30 @@
 package com.mononokehime.demo.controller;
 
+/*-
+ * #%L
+ * Demo Spring Boot Application
+ * %%
+ * Copyright (C) 2018 - 2019 Monononoke Organization
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
+
+
+
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.net.URI;
@@ -43,7 +68,7 @@ public class EmployeeController {
 
         System.out.println("***************" + repository.findAll().size());
 
-        List<Resource<Employee>> employees = repository.findAll().stream()
+        final List<Resource<Employee>> employees = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
         System.out.println("***************" + employees);
@@ -53,9 +78,9 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public final ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) throws URISyntaxException {
+    public final ResponseEntity<?> newEmployee(@RequestBody final Employee newEmployee) throws URISyntaxException {
 
-        Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
+        final Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
 
         return ResponseEntity
                 .created(new URI(resource.getId().expand().getHref()))
@@ -64,18 +89,18 @@ public class EmployeeController {
 
     // Single item
     @GetMapping("/employees/{id}")
-    public final Resource<Employee> one(@PathVariable Long id) {
+    public final Resource<Employee> one(@PathVariable final Long id) {
 
-        Employee employee = repository.findById(id)
+        final Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
 
         return assembler.toResource(employee);
     }
 
     @PutMapping("/employees/{id}")
-    public final ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
+    public final ResponseEntity<?> replaceEmployee(@RequestBody final Employee newEmployee, @PathVariable final Long id) throws URISyntaxException {
 
-        Employee updatedEmployee = repository.findById(id)
+        final Employee updatedEmployee = repository.findById(id)
                 .map(employee -> {
                     employee.setName(newEmployee.getName());
                     employee.setRole(newEmployee.getRole());
@@ -86,7 +111,7 @@ public class EmployeeController {
                     return repository.save(newEmployee);
                 });
 
-        Resource<Employee> resource = assembler.toResource(updatedEmployee);
+        final Resource<Employee> resource = assembler.toResource(updatedEmployee);
 
         return ResponseEntity
                 .created(new URI(resource.getId().expand().getHref()))
@@ -94,7 +119,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
-    public final ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    public final ResponseEntity<?> deleteEmployee(@PathVariable final Long id) {
 
         repository.deleteById(id);
 

@@ -12,6 +12,14 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>demo-app</name>
   <description>Demo project for Spring Boot</description>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
   <developers>
     <developer>
       <id>mononokehime</id>
@@ -31,6 +39,8 @@
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
   <properties>
+    <checkstyle.configLocation>sun_checks.xml</checkstyle.configLocation>
+    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <dependency-check-maven.version>4.0.1</dependency-check-maven.version>
     <gitlog-maven-plugin.version>1.13.12</gitlog-maven-plugin.version>
     <java.version>1.8</java.version>
@@ -40,6 +50,7 @@
     <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
     <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
     <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+    <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
     <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
     <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
@@ -47,6 +58,7 @@
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
     <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
+    <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
   </properties>
   <!-- unused in this project
     <issueManagement>
@@ -125,10 +137,77 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>${maven-project-info-reports-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${license-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>first</id>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>update-file-header</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <licenseName>my_license</licenseName>
+            <licenseResolver>${project.baseUri}/src/license</licenseResolver>
+            <organizationName>Monononoke Organization</organizationName>
+            <inceptionYear>2018</inceptionYear>
+            <projectName>Demo Spring Boot Application</projectName>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>${cobertura-maven-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <!-- these plugins are used when a build runs -->
     <plugins>
+      <!--
+      https://www.mojohaus.org/license-maven-plugin/examples/example-add-license.html
+      license:add-third-party
+      Generates a file containing a list of all dependencies and their licenses for a single project build.
+      license:aggregate-add-third-party
+      Generates a file containing a list of all dependencies and their licenses for a multi-module build.
+      license:comment-style-list
+      Displays all the available comment styles to box file headers.
+      license:download-licenses
+      Downloads the license files associated with each dependency.
+      license:aggregate-download-licenses
+      Downloads the license files associated with each dependency for a multi-modules build.
+      license:license-list
+      Display all available licenses.
+      license:update-file-header
+      Updates the license header of the current project source files.
+      license:check-file-header
+      Checks the license header of the current project source files.
+      license:remove-file-header
+      Remove any license header of the current project source files.
+      license:update-project-license
+      Updates (or creates) the main project license file according to the license defined in the licenseName parameter.
+      -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.16</version>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.8</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>spotbugs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -186,7 +265,11 @@
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
-      <!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html generates checkstyle report in the site -->
+      <!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html generates checkstyle report in the site
+        Comes with two checkstyles - sun and google
+        https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
+        https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/sun_checks.xml
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -199,10 +282,13 @@
               <goal>check</goal>
             </goals>
             <configuration>
+              <configLocation>${checkstyle.configLocation}</configLocation>
               <encoding>UTF-8</encoding>
               <consoleOutput>true</consoleOutput>
               <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
+              <failOnViolation>true</failOnViolation>
+              <linkXRef>true</linkXRef>
+              <violationSeverity>warning</violationSeverity>
               <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
               <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
             </configuration>
@@ -308,6 +394,48 @@
               </descriptors>
             </configuration>
           </plugin>
+          <!-- https://maven.apache.org/jxr/maven-jxr-plugin/usage.html allows linking inside the site generation-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <version>${maven-jxr-plugin.version}</version>
+          </plugin>
+          <!-- http://www.mojohaus.org/cobertura-maven-plugin/usage.html -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>clean</goal>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <check>
+                <branchRate>85</branchRate>
+                <lineRate>85</lineRate>
+                <haltOnFailure>true</haltOnFailure>
+                <totalBranchRate>85</totalBranchRate>
+                <totalLineRate>85</totalLineRate>
+                <packageLineRate>85</packageLineRate>
+                <packageBranchRate>85</packageBranchRate>
+                <!--<regexes>-->
+                <!--<regex>-->
+                <!--<pattern>com.example.reallyimportant.*</pattern>-->
+                <!--<branchRate>90</branchRate>-->
+                <!--<lineRate>80</lineRate>-->
+                <!--</regex>-->
+                <!--<regex>-->
+                <!--<pattern>com.example.boringcode.*</pattern>-->
+                <!--<branchRate>40</branchRate>-->
+                <!--<lineRate>30</lineRate>-->
+                <!--</regex>-->
+                <!--</regexes>-->
+              </check>
+            </configuration>
+          </plugin>
           <!--&lt;!&ndash; https://bsorrentino.github.io/maven-confluence-plugin/project-summary.html &ndash;&gt;-->
           <!--<plugin>-->
           <!--<groupId>org.bsc.maven</groupId>-->
@@ -330,7 +458,8 @@
       </build>
       <reporting>
         <!-- these are the reports we generate
-
+                    maven-pmd-plugin
+                    spotbugs-maven-plugin
                     gitlog-maven-plugin
                     maven-changelog-plugin - source control changes
                     maven-changes-plugin (for JIRA changes)
@@ -344,6 +473,41 @@
                     license-maven-plugin
                 -->
         <plugins>
+          <!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html
+           https://maven.apache.org/plugins/maven-pmd-plugin/pmd-mojo.html
+           -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>${maven-pmd-plugin.version}</version>
+            <configuration>
+              <skipEmptyReport>false</skipEmptyReport>
+              <sourceEncoding>utf-8</sourceEncoding>
+              <outputDirectory>target/site</outputDirectory>
+              <targetDirectory>target/site</targetDirectory>
+              <includeXmlInSite>true</includeXmlInSite>
+              <showPmdLog>false</showPmdLog>
+              <!--<minimumTokens>100</minimumTokens>-->
+              <!--<excludes>-->
+              <!--<exclude>**/*Bean.java</exclude>-->
+              <!--<exclude>**/generated/*.java</exclude>-->
+              <!--</excludes>-->
+              <!--<excludeRoots>-->
+              <!--<excludeRoot>target/generated-sources</excludeRoot>-->
+              <!--</excludeRoots>-->
+            </configuration>
+          </plugin>
+          <!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${spotbugs-maven-plugin.version}</version>
+            <configuration>
+              <xmlOutput>true</xmlOutput>
+              <!-- Optional directory to put spotbugs xdoc xml report -->
+              <xmlOutputDirectory>target/site</xmlOutputDirectory>
+            </configuration>
+          </plugin>
           <!-- https://danielflower.github.io/maven-gitlog-plugin/index.html -->
           <plugin>
             <groupId>com.github.danielflower.mavenplugins</groupId>
@@ -357,6 +521,10 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changelog-plugin</artifactId>
             <version>${maven-changelog-plugin.version}</version>
+            <configuration>
+              <type>range</type>
+              <range>30</range>
+            </configuration>
           </plugin>
           <!-- https://maven.apache.org/plugins/maven-changes-plugin/index.html generates JIRA reports -->
           <!--<plugin>-->
@@ -454,18 +622,20 @@
               </reportSet>
             </reportSets>
             <configuration>
-              <configLocation>src/main/checks/google_checkstyle.xml</configLocation>
-              <failOnViolation>false</failOnViolation>
-              <enableFilesSummary>false</enableFilesSummary>
+              <configLocation>${checkstyle.configLocation}</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <failOnViolation>true</failOnViolation>
+              <linkXRef>true</linkXRef>
+              <violationSeverity>warning</violationSeverity>
+              <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+              <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
             </configuration>
           </plugin>
-          <!-- https://maven.apache.org/jxr/maven-jxr-plugin/usage.html allows linking inside the site generation-->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>${maven-jxr-plugin.version}</version>
-          </plugin>
-          <!-- https://maven.apache.org/plugins/maven-dependency-plugin/usage.html  shows dependency info in the site generation -->
+          <!-- https://maven.apache.org/plugins/maven-dependency-plugin/usage.html
+          https://maven.apache.org/plugins/maven-dependency-plugin/plugin-info.html
+          shows dependency info in the site generation -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
@@ -486,7 +656,8 @@
             <reportSets>
               <reportSet>
                 <reports>
-                  <report>aggregate</report>
+                  <!--<report>aggregate</report>-->
+                  <report>check</report>
                 </reports>
               </reportSet>
             </reportSets>
@@ -495,11 +666,58 @@
               <skipRuntimeScope>true</skipRuntimeScope>
             </configuration>
           </plugin>
-          <!-- https://www.mojohaus.org/license-maven-plugin/usage.html -->
+          <!-- http://www.mojohaus.org/cobertura-maven-plugin/plugin-info.html -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>cobertura</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+          <!-- https://www.mojohaus.org/taglist-maven-plugin/usage.html -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>taglist-maven-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+              <tagListOptions>
+                <tagClasses>
+                  <tagClass>
+                    <displayName>Todo Work</displayName>
+                    <tags>
+                      <tag>
+                        <matchString>todo</matchString>
+                        <matchType>ignoreCase</matchType>
+                      </tag>
+                      <tag>
+                        <matchString>FIXME</matchString>
+                        <matchType>exact</matchType>
+                      </tag>
+                    </tags>
+                  </tagClass>
+                </tagClasses>
+              </tagListOptions>
+            </configuration>
+          </plugin>
+          <!-- https://www.mojohaus.org/license-maven-plugin/usage.html
+          https://www.mojohaus.org/license-maven-plugin/plugin-info.html
+          -->
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>license-maven-plugin</artifactId>
             <version>${license-maven-plugin.version}</version>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>aggregate-third-party-report</report>
+                  <report>third-party-report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
           </plugin>
         </plugins>
       </reporting>
