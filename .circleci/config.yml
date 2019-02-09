@@ -30,15 +30,22 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: mvn dependency:go-offline
+      - run: mvn dependency:resolve-plugins dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+      - run:
+          name: maven build
+          command: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - run:
+          name: maven test
+          command: | mvn -o test
+
       # run tests and deploy to maven repo
       - run:
           name: maven deploy
           command: |
-           mvn --settings .circleci/settings.xml clean deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
+           mvn --settings -o .circleci/settings.xml deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
