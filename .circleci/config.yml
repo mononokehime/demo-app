@@ -44,7 +44,7 @@ jobs:
       - run:
           name: maven test
           command: |
-            mvn -o test
+            mvn test
 
       # run tests and deploy to maven repo
       - run:
