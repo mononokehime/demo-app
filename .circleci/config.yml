@@ -50,4 +50,4 @@ jobs:
       - run:
           name: maven deploy
           command: |
-            mvn --settings -o .circleci/settings.xml deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
+            mvn --settings .circleci/settings.xml -o deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
