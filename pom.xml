@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.mononokehime</groupId>
   <artifactId>demo-app</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>demo-app</name>
   <description>Demo project for Spring Boot</description>
   <licenses>
@@ -38,10 +38,21 @@
     <tag>HEAD</tag>
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
+  <distributionManagement>
+    <repository>
+      <id>maven.fergusmac.com</id>
+      <url>${distributionManagement.url}/release</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven.fergusmac.com</id>
+      <url>${distributionManagement.url}/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
   <properties>
     <checkstyle.configLocation>sun_checks.xml</checkstyle.configLocation>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <dependency-check-maven.version>4.0.1</dependency-check-maven.version>
+    <distributionManagement.url>s3://maven.fergusmac.com</distributionManagement.url>
     <gitlog-maven-plugin.version>1.13.12</gitlog-maven-plugin.version>
     <java.version>1.8</java.version>
     <license-maven-plugin.version>1.16</license-maven-plugin.version>
@@ -56,9 +67,11 @@
     <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
     <maven-surefire-report-plugin.version>2.22.0</maven-surefire-report-plugin.version>
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+    <maven-s3-wagon.version>1.1.0</maven-s3-wagon.version>
     <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
     <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
     <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
+    <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
   </properties>
   <!-- unused in this project
     <issueManagement>
@@ -66,30 +79,16 @@
         <url>https://jira-url.com/jira/browse/SPACE</url>
     </issueManagement>
     -->
-  <!--<distributionManagement>-->
-  <!--&lt;!&ndash; Publish the versioned releases here &ndash;&gt;-->
-  <!--<repository>-->
-  <!--<id>local-release</id>-->
-  <!--<name>local-release</name>-->
-  <!--<url>${distributionManagement.url}/local-release/</url>-->
-  <!--</repository>-->
-  <!--&lt;!&ndash; Publish the versioned releases here &ndash;&gt;-->
-  <!--<snapshotRepository>-->
-  <!--<id>local-snapshot</id>-->
-  <!--<name>local-snapshot</name>-->
-  <!--<url>${distributionManagement.url}/local-snapshot/</url>-->
-  <!--</snapshotRepository>-->
-  <!--</distributionManagement>-->
   <dependencies>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
-      <version>2.9.2</version>
+      <version>${springfox-swagger2.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger-ui</artifactId>
-      <version>2.9.2</version>
+      <version>${springfox-swagger2.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -124,6 +123,13 @@
     </dependency>
   </dependencies>
   <build>
+    <extensions>
+      <extension>
+        <groupId>com.allogy.maven.wagon</groupId>
+        <artifactId>maven-s3-wagon</artifactId>
+        <version>${maven-s3-wagon.version}</version>
+      </extension>
+    </extensions>
     <resources>
       <resource>
         <filtering>true</filtering>
