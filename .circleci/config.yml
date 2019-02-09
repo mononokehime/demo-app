@@ -39,10 +39,12 @@ jobs:
 
       - run:
           name: maven build
-          command: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+          command: |
+          mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
       - run:
           name: maven test
-          command: | mvn -o test
+          command: |
+          mvn -o test
 
       # run tests and deploy to maven repo
       - run:
