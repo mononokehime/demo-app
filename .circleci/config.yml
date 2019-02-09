@@ -36,14 +36,9 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-        
-      # run tests!
-      - run:
-          name: maven build
-          command: |
-            mvn clean install
-      # deploy to maven repo
+
+      # run tests and deploy to maven repo
       - run:
           name: maven deploy
           command: |
-           mvn --settings .circleci/settings.xml deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
+           mvn --settings .circleci/settings.xml clean deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
