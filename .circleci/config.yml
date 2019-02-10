@@ -47,3 +47,8 @@ jobs:
           name: maven deploy
           command: |
             mvn --settings .circleci/settings.xml -DskipTests deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
+test:
+  post:
+    - if [[ $GIT_USER_EMAIL ]]; then git config --global user.email "$GIT_USER_EMAIL" ; fi
+    - if [[ $GIT_USER_NAME ]]; then git config --global user.name "$GIT_USER_NAME" ; fi
+    - if [[ $RELEASE ]]; then mvn -B release:prepare -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT ; fi
