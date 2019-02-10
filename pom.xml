@@ -10,8 +10,13 @@
   <groupId>com.mononokehime</groupId>
   <artifactId>demo-app</artifactId>
   <version>0.0.2-SNAPSHOT</version>
-  <name>demo-app</name>
+  <name>Spring Boot Demo App</name>
   <description>Demo project for Spring Boot</description>
+  <inceptionYear>2019</inceptionYear>
+  <organization>
+    <name>Mononokehime</name>
+    <url>https://github.com/mononokehime</url>
+  </organization>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -54,6 +59,7 @@
     <dependency-check-maven.version>4.0.1</dependency-check-maven.version>
     <distributionManagement.url>s3://maven.fergusmac.com</distributionManagement.url>
     <gitlog-maven-plugin.version>1.13.12</gitlog-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
     <java.version>1.8</java.version>
     <license-maven-plugin.version>1.16</license-maven-plugin.version>
     <maven-changelog-plugin.version>2.3</maven-changelog-plugin.version>
@@ -121,6 +127,11 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test-autoconfigure</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <extensions>
@@ -147,27 +158,16 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <version>${license-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>first</id>
-              <phase>process-sources</phase>
-              <goals>
-                <goal>update-file-header</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <licenseName>my_license</licenseName>
-            <licenseResolver>${project.baseUri}/src/license</licenseResolver>
-            <organizationName>Monononoke Organization</organizationName>
-            <inceptionYear>2018</inceptionYear>
-            <projectName>Demo Spring Boot Application</projectName>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>cobertura-maven-plugin</artifactId>
           <version>${cobertura-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -196,15 +196,36 @@
       license:update-project-license
       Updates (or creates) the main project license file according to the license defined in the licenseName parameter.
       -->
+      <!-- https://www.mojohaus.org/license-maven-plugin/examples/update-file-header-config.html
+      https://www.mojohaus.org/license-maven-plugin/examples/example-license-list.html  -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>1.16</version>
+        <executions>
+          <execution>
+            <id>first</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+          </execution>
+        </executions>
+        <!--<configuration>-->
+        <!--<licenseName>my_license</licenseName>-->
+        <!--<licenseResolver>${project.baseUri}/src/license</licenseResolver>-->
+        <!--</configuration>-->
+        <configuration>
+          <licenseName>apache_v2</licenseName>
+          <roots>
+            <root>src/main/java</root>
+            <root>src/test</root>
+          </roots>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>3.1.8</version>
+        <version>${spotbugs-maven-plugin.version}</version>
         <executions>
           <execution>
             <phase>verify</phase>
@@ -237,6 +258,7 @@
         <configuration>
           <checkModificationExcludes>
             <checkModificationExclude>pom.xml</checkModificationExclude>
+            <tagNameFormat>v@{project.version}</tagNameFormat>
           </checkModificationExcludes>
         </configuration>
       </plugin>
@@ -271,6 +293,55 @@
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
+      <!-- Jacoco Test Coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jacoco-report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <!-- Add this checking -->
+          <execution>
+            <id>jacoco-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <excludes>
+                    <exclude>*Test</exclude>
+                  </excludes>
+                  <element>PACKAGE</element>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.4</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <excludes>
+            <exclude>**/*DemoApplication.*</exclude>
+            <exclude>com/mononokehime/demo/data/*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
       <!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html generates checkstyle report in the site
         Comes with two checkstyles - sun and google
         https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
@@ -297,6 +368,7 @@
               <violationSeverity>warning</violationSeverity>
               <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
               <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+              <excludes>**/*DemoApplication.*,com/mononokehime/demo/data/*</excludes>
             </configuration>
           </execution>
         </executions>
@@ -419,6 +491,15 @@
               </execution>
             </executions>
             <configuration>
+              <instrumentation>
+                <ignores>
+                  <ignore>com.mononokehime.demo.data.*</ignore>
+                </ignores>
+                <excludes>
+                  <exclude></exclude>
+                  <exclude>com/mononokehime/**/*Test.class</exclude>
+                </excludes>
+              </instrumentation>
               <check>
                 <branchRate>85</branchRate>
                 <lineRate>85</lineRate>
@@ -427,18 +508,13 @@
                 <totalLineRate>85</totalLineRate>
                 <packageLineRate>85</packageLineRate>
                 <packageBranchRate>85</packageBranchRate>
-                <!--<regexes>-->
-                <!--<regex>-->
-                <!--<pattern>com.example.reallyimportant.*</pattern>-->
-                <!--<branchRate>90</branchRate>-->
-                <!--<lineRate>80</lineRate>-->
-                <!--</regex>-->
-                <!--<regex>-->
-                <!--<pattern>com.example.boringcode.*</pattern>-->
-                <!--<branchRate>40</branchRate>-->
-                <!--<lineRate>30</lineRate>-->
-                <!--</regex>-->
-                <!--</regexes>-->
+                <regexes>
+                  <regex>
+                    <pattern>com.mononokehime.demo.controller.*</pattern>
+                    <branchRate>90</branchRate>
+                    <lineRate>80</lineRate>
+                  </regex>
+                </regexes>
               </check>
             </configuration>
           </plugin>
@@ -464,6 +540,7 @@
       </build>
       <reporting>
         <!-- these are the reports we generate
+                    jacoco plugin for test coverage
                     maven-pmd-plugin
                     spotbugs-maven-plugin
                     gitlog-maven-plugin
@@ -479,6 +556,25 @@
                     license-maven-plugin
                 -->
         <plugins>
+          <!-- https://www.eclemma.org/jacoco/trunk/doc/maven.html -->
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <!-- select non-aggregate reports -->
+                  <report>report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+            <configuration>
+              <excludes>
+                <exclude>**/*DemoApplication.*</exclude>
+                <exclude>com/mononokehime/demo/data/*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
           <!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html
            https://maven.apache.org/plugins/maven-pmd-plugin/pmd-mojo.html
            -->
@@ -637,7 +733,14 @@
               <violationSeverity>warning</violationSeverity>
               <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
               <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+              <excludes>**/*DemoApplication.*,com/mononokehime/demo/data/*</excludes>
             </configuration>
+          </plugin>
+          <!-- https://maven.apache.org/jxr/maven-jxr-plugin/usage.html allows linking inside the site generation-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <version>${maven-jxr-plugin.version}</version>
           </plugin>
           <!-- https://maven.apache.org/plugins/maven-dependency-plugin/usage.html
           https://maven.apache.org/plugins/maven-dependency-plugin/plugin-info.html

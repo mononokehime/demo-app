@@ -2,15 +2,15 @@ package com.mononokehime.demo;
 
 /*-
  * #%L
- * Demo Spring Boot Application
+ * demo-app
  * %%
- * Copyright (C) 2018 - 2019 Monononoke Organization
+ * Copyright (C) 2019 Mononokehime
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,14 +20,17 @@ package com.mononokehime.demo;
  * #L%
  */
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 
 /*
  * https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html
  */
 @SpringBootApplication
+@ComponentScan("com.mononokehime.demo")
 public class DemoApplication {
 
     public static void main(final String[] args) {
