@@ -136,7 +136,7 @@ public class ResponseController {
             return "Version information could not be retrieved";
         }
     }
-    private String readFromInputStream(InputStream inputStream)
+    private String readFromInputStream(final InputStream inputStream)
             throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
