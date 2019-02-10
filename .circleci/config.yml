@@ -9,7 +9,6 @@ jobs:
       custom_checkout:
         type: string
         default: \"\"
-  build:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
