@@ -27,6 +27,8 @@ package com.mononokehime.demo;
 
 
 import java.util.Collections;
+
+import com.mononokehime.demo.controller.ResponseController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -58,9 +60,9 @@ public class SwaggerConfig {
         return new ApiInfo(
                 "My REST API",
                 "Some custom description of API.",
-                "API TOS",
+                ResponseController.VERSION,
                 "Terms of service",
-                new Contact("John Doe", "www.example.com", "myeaddress@company.com"),
+                new Contact("Fergus MacDermot", "www.fergusmac.com", "fakeemail@company.com"),
                 "License of API", "API license URL", Collections.emptyList());
     }
 }

@@ -222,6 +222,7 @@
           </roots>
         </configuration>
       </plugin>
+      <!-- https://spotbugs.readthedocs.io/en/latest/maven.html -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -234,6 +235,22 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <effort>Max</effort>
+          <threshold>Low</threshold>
+          <failOnError>true</failOnError>
+          <plugins>
+            <plugin>
+              <groupId>com.h3xstream.findsecbugs</groupId>
+              <artifactId>findsecbugs-plugin</artifactId>
+              <version>LATEST</version>
+              <!-- Auto-update to the latest stable -->
+            </plugin>
+          </plugins>
+          <xmlOutput>true</xmlOutput>
+          <!-- Optional directory to put spotbugs xdoc xml report -->
+          <xmlOutputDirectory>target/site</xmlOutputDirectory>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -605,6 +622,17 @@
             <artifactId>spotbugs-maven-plugin</artifactId>
             <version>${spotbugs-maven-plugin.version}</version>
             <configuration>
+              <effort>Max</effort>
+              <threshold>Low</threshold>
+              <failOnError>true</failOnError>
+              <plugins>
+                <plugin>
+                  <groupId>com.h3xstream.findsecbugs</groupId>
+                  <artifactId>findsecbugs-plugin</artifactId>
+                  <version>LATEST</version>
+                  <!-- Auto-update to the latest stable -->
+                </plugin>
+              </plugins>
               <xmlOutput>true</xmlOutput>
               <!-- Optional directory to put spotbugs xdoc xml report -->
               <xmlOutputDirectory>target/site</xmlOutputDirectory>

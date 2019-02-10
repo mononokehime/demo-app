@@ -1,47 +1,116 @@
+# Demo Project
+This java project is for demonstrating various functionality of Spring Boot and 
+maven, built in circleCI. By default the server runs on port 8000 and can be started by
+running a psring boot maven target. JQ
 
-INFO] Generating "Change Log" report    --- maven-changelog-plugin:2.3:changelog
-[INFO] Generating changed sets xml to: /Users/fergus.macdermot/Documents/git-repo/personal/demo-app/target/changelog.xml
-[INFO] Executing: /bin/sh -c cd /Users/fergus.macdermot/Documents/git-repo/personal/demo-app && git whatchanged '--since=2018-12-06 07:00:16 +0000' '--until=2019-01-06 07:00:16 +0000' --date=iso -- /Users/fergus.macdermot/Documents/git-repo/personal/demo-app
-[INFO] Working directory: /Users/fergus.macdermot/Documents/git-repo/personal/demo-app
-[INFO] Generating "File Activity" report --- maven-changelog-plugin:2.3:file-activity
-[INFO] Using existing changelog.xml...
-[INFO] Generating "Developer Activity" report --- maven-changelog-plugin:2.3:dev-activity
-[INF
-Usage
+## PreRequisites
+You will need the following installed:
+* <a href="https://stedolan.github.io/jq/">JQ</a>
+* Java 8+
+* Maven 3+
+* lombox plugin if using Intellij
 
+# Spring Boot Features
+The spring boot features leveraged are:
+* RestControllers with persistence in H2
+* Generated Swagger UI
+* HATEOAS JSON responses
+* Response Controller for logging version and header details
+* Example test cases for controllers
+* Spring Actuator with defaults
 
+# Maven Features
+For details see the pom.xml. The maven features leveraged are:
+* Site generation
+* License management, and license header updates with The Apache Software License, Version 2.0
+* Standard maven project information
+* Maven project reports
+    1. Jacoco - code coverage
+    2. CPD - duplicate code)
+    3. PMD - coding rules)
+    4. SpotBugs - bug detection)
+    5. Gitlog - user changes
+    6. Changelog - files that changed by commit
+    7. File Activity - number of changes by file
+    8. Developer Activity - changes by developer
+    9. SureFire Report - junit test results
+    10. Checkstyle - stylistic deviation
+    11. Dependency Analysis - third party dependencies
+    12. Dependency Check - OWASP CVE check
+    13. Tag List - TODO and Fixme occurances
+    14. Licenses - third party license list
+* Release Management
+ 
+# Building
+The project can be built with the following targets
+```bash
+mvn clean install
+# to generate the site and reports
+mvn site install -P reporting
+```
 
-Employee
+# Running and Testing
+To run the project and test the responses
+```bash
+# Start the server
+mvn clean spring-boot:run
 
-mvn clean site install -P reporting
+### Curl commands, in another window
 
-mvn license:remove-file-header
+## Check EmployeeController
+# Return all employees
+curl -v http://localhost:8000/employees | jq
 
-
-curl -v localhost:8000/actuator/health
-curl -v localhost:8000/actuator/info
-curl -v localhost:8000/actuator/metrics
-curl -v localhost:8000/employees | jq
-curl -v localhost:8000/headers
-curl -H "Accept-Charset: utf-8" -v localhost:8080/headers
+# Return employee #1
 curl -v http://localhost:8000/employees/1 | jq
-new employee
-curl -v -X POST localhost:8000/employees -H 'Content-Type:application/json' -d '{"name": "Samwise Gamgee", "role": "ring bearer"}'
-replace
-curl -v -X PUT localhost:8000/employees/3 -H 'Content-Type:application/json' -d '{"name": "Samwise Gamgee", "role": "ring bear"}'
-delete
-curl -v -X DELETE localhost:8000/employees/3
-curl -H "custom: utf-8" localhost:8000/v2/api-docs | jq
 
-# 
-logback
+# Create new employee
+curl -v -X POST localhost:8000/employees -H 'Content-Type:application/json' -d '{"name": "Samwise Gamgee", "role": "ring bearer"}'
+
+# Replace/update employee
+curl -v -X PUT localhost:8000/employees/3 -H 'Content-Type:application/json' -d '{"name": "Samwise Gamgee", "role": "ring bear"}'
+
+# Delete employee
+curl -v -X DELETE localhost:8000/employees/3
+
+## Check ResponseController
+
+# See all request information
+curl -H "Accept-Charset: utf-8" -v localhost:8000/headers
+
+# See version info
+curl -v localhost:8000/version
+
+## Spring Actuator
+
+# Get the app status (up or down)
+curl -v localhost:8000/actuator/health
+
+# Get the app info - returns empty
+curl -v localhost:8000/actuator/info
+
+# Get the app metrics - returns error
+curl -v localhost:8000/actuator/metrics
+
+## Swagger Info
+
+# View complete swagger json
+curl -v localhost:8000/v2/api-docs | jq
+```
+
+To view the swagger UI go to http://localhost:8000/swagger-ui.html
+
+# Useful Links
+
+### The code this is based on
+https://spring.io/guides/tutorials/rest/
+
+### Other useful Spring Boot resources
+https://start.spring.io/
+https://spring.io/guides/tutorials/bookmarks/
+https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html
+https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
+https://www.baeldung.com/spring-boot-app-as-a-service
+
+### Logback
 https://logback.qos.ch/manual/configuration.html
-# https://spring.io/guides/tutorials/rest/ - original code
-# https://start.spring.io/
-# https://spring.io/guides/tutorials/bookmarks/
-# https://www.baeldung.com/spring-boot-app-as-a-service
-# https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html
-# https://www.packer.io/intro/getting-started/build-image.html
-# https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
-# mvn clean spring-boot:run
-# http://localhost:8000/swagger-ui.html

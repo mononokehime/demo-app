@@ -67,7 +67,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = DemoApplication.class)
 @AutoConfigureMockMvc
-// @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 @AutoConfigureTestDatabase
 public class EmployeeControllerTest {
 
