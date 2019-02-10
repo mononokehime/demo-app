@@ -24,3 +24,7 @@ management:
       enabled: true
     env:
       enabled: true
+# Disable lazy loading for this app
+spring:
+  jpa:
+    open-in-view: false

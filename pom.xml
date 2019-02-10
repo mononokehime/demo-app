@@ -244,19 +244,24 @@
             <goals>
               <goal>update-file-header</goal>
             </goals>
+            <configuration>
+              <licenseName>apache_v2</licenseName>
+              <roots>
+                <root>src/main/java</root>
+                <root>src/test/java</root>
+              </roots>
+              <excludes>
+                <exclude>*.properties</exclude>
+                <exclude>*.txt</exclude>
+                <exclude>*.xml</exclude>
+              </excludes>
+            </configuration>
           </execution>
         </executions>
         <!--<configuration>-->
         <!--<licenseName>my_license</licenseName>-->
         <!--<licenseResolver>${project.baseUri}/src/license</licenseResolver>-->
         <!--</configuration>-->
-        <configuration>
-          <licenseName>apache_v2</licenseName>
-          <roots>
-            <root>src/main/java</root>
-            <root>src/test</root>
-          </roots>
-        </configuration>
       </plugin>
       <!-- https://spotbugs.readthedocs.io/en/latest/maven.html -->
       <plugin>
