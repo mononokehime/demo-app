@@ -127,6 +127,8 @@ https://spring.io/guides/tutorials/bookmarks/
 https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html
 https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
 https://www.baeldung.com/spring-boot-app-as-a-service
+Hateoas examples
+https://github.com/spring-projects/spring-hateoas-examples
 Actuator
 https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/
 https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-enabling-endpoints
