@@ -31,6 +31,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -61,9 +65,9 @@ public class ResponseController {
     @GetMapping("/version")
     public final  ResponseEntity<String> version(@RequestHeader final HttpHeaders headers) throws SocketException {
         LOGGER.debug("************************** request headers : " + headers);
-
+        String v =  readGitProperties();
         return new ResponseEntity<>(
-                VERSION, headers, HttpStatus.OK);
+                v, headers, HttpStatus.OK);
     }
 
     private String httpServletRequestToString(final HttpServletRequest request, final HttpHeaders headers) throws SocketException {
@@ -120,5 +124,27 @@ public class ResponseController {
         }
         LOGGER.debug(sb.toString());
         return sb.toString();
+    }
+
+    private String readGitProperties() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("git.properties");
+        try {
+            return readFromInputStream(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Version information could not be retrieved";
+        }
+    }
+    private String readFromInputStream(InputStream inputStream)
+            throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
     }
 }

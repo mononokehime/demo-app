@@ -36,8 +36,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Properties;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +51,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 public class ResponseControllerTest {
-
+    @Autowired
+    private ObjectMapper mapper;
     @Autowired
     private MockMvc mvc;
 
@@ -59,12 +63,13 @@ public class ResponseControllerTest {
         MvcResult result = mvc.perform(get("/version")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(ResponseController.VERSION))
                 .andReturn();
 
-//        String content = result.getResponse().getContentAsString();
-//        String response = mapper.readValue(content, String.class);
-//        System.out.print("******************************************* response"+response);
+        String content = result.getResponse().getContentAsString();
+
+        Properties response = mapper.readValue(content, Properties.class);
+        assertEquals("2019-02-10T16:23:10+0800", response.get("git.build.time"));
+        System.out.print("******************************************* response"+response);
     }
 
     @Test
@@ -79,4 +84,5 @@ public class ResponseControllerTest {
         String content = result.getResponse().getContentAsString();
         System.out.print("******************************************* response"+content);
     }
+
 }

@@ -17,7 +17,7 @@ The spring boot features leveraged are:
 * HATEOAS JSON responses
 * Response Controller for logging version and header details
 * Example test cases for controllers
-* Spring Actuator with defaults
+* Spring Actuator
 
 # Maven Features
 For details see the pom.xml. The maven features leveraged are:
@@ -78,19 +78,8 @@ curl -v -X DELETE localhost:8000/employees/3
 # See all request information
 curl -H "Accept-Charset: utf-8" -v localhost:8000/headers
 
-# See version info
+# See version info - from git.properties
 curl -v localhost:8000/version
-
-## Spring Actuator
-
-# Get the app status (up or down)
-curl -v localhost:8000/actuator/health
-
-# Get the app info - returns empty
-curl -v localhost:8000/actuator/info
-
-# Get the app metrics - returns error
-curl -v localhost:8000/actuator/metrics
 
 ## Swagger Info
 
@@ -99,6 +88,33 @@ curl -v localhost:8000/v2/api-docs | jq
 ```
 
 To view the swagger UI go to http://localhost:8000/swagger-ui.html
+
+# Spring Actuator V2
+Spring actuator v2 disables most endpoints bu default. The application.yaml overrides some 
+of the endpoints. They can be queried in the following ways
+```bash
+
+## Spring Actuator
+
+# Get the app status (up or down)
+curl -v localhost:8000/actuator/health
+
+# Get the app info - returns build information
+curl -v localhost:8000/actuator/info
+
+# Get the app metrics
+curl -v localhost:8000/actuator/metrics
+# Returns a list of names that can be queried, e.g.
+curl -v localhost:8000/actuator/metrics/jvm.memory.max
+
+# List of beans
+curl http://localhost:8000/actuator/beans -i -X GET
+
+# Environment variables
+curl -v localhost:8000/actuator/env
+
+```
+
 
 # Useful Links
 
@@ -111,6 +127,13 @@ https://spring.io/guides/tutorials/bookmarks/
 https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html
 https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
 https://www.baeldung.com/spring-boot-app-as-a-service
+Actuator
+https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/
+https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-enabling-endpoints
+https://www.baeldung.com/spring-boot-actuators
+Git commit plugin
+https://dzone.com/articles/maven-git-commit-id-plugin
+
 
 ### Logback
 https://logback.qos.ch/manual/configuration.html
