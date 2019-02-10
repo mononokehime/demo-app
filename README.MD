@@ -1,7 +1,7 @@
 # Demo Project
 This java project is for demonstrating various functionality of Spring Boot and 
 maven, built in circleCI. By default the server runs on port 8000 and can be started by
-running a psring boot maven target. JQ
+running a spring boot maven target.
 
 ## PreRequisites
 You will need the following installed:
@@ -26,9 +26,9 @@ For details see the pom.xml. The maven features leveraged are:
 * Standard maven project information
 * Maven project reports
     1. Jacoco - code coverage
-    2. CPD - duplicate code)
+    2. CPD - duplicate code
     3. PMD - coding rules)
-    4. SpotBugs - bug detection)
+    4. SpotBugs - bug detection
     5. Gitlog - user changes
     6. Changelog - files that changed by commit
     7. File Activity - number of changes by file
@@ -37,7 +37,7 @@ For details see the pom.xml. The maven features leveraged are:
     10. Checkstyle - stylistic deviation
     11. Dependency Analysis - third party dependencies
     12. Dependency Check - OWASP CVE check
-    13. Tag List - TODO and Fixme occurances
+    13. Tag List - TODO and Fixme
     14. Licenses - third party license list
 * Release Management
  
