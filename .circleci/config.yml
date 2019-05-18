@@ -4,11 +4,7 @@
 #
 version: 2.1
 jobs:
-  job_with_optional_custom_checkout:
-    parameters:
-      custom_checkout:
-        type: string
-        default: \"\"
+  build:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -25,11 +21,34 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
 
     steps:
-      - when:
-          condition: <<parameters.custom_checkout>>
-          steps:
-            - run: echo \"my custom checkout\"
-      - unless:
-          condition: <<parameters.custom_checkout>>
-          steps:
-            run: echo \"my not checkout\"
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: mvn dependency:resolve-plugins dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+
+      - run:
+          name: maven test
+          command: |
+            mvn clean test
+
+      # run deploy to maven repo, no need to run tests again
+      - run:
+          name: maven deploy
+          command: |
+            mvn --settings .circleci/settings.xml -DskipTests deploy -Diam-user-access-key-id=$iamUserAccessKeyId -Diam-user-secret-key=$iamUserSecretKey
+test:
+  post:
+    - if [[ $GIT_USER_EMAIL ]]; then git config --global user.email "$GIT_USER_EMAIL" ; fi
+    - if [[ $GIT_USER_NAME ]]; then git config --global user.name "$GIT_USER_NAME" ; fi
+    - if [[ $RELEASE ]]; then mvn -B release:prepare -Dscm-developer-connection=${scmDeveloperConnection} ; fi
