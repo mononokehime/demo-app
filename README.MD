@@ -1,3 +1,5 @@
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=mononokehime/demo-app)](https://dependabot.com)
+
 # Demo Project
 This java project is for demonstrating various functionality of Spring Boot and 
 maven, built in circleCI. By default the server runs on port 8000 and can be started by
@@ -96,6 +98,10 @@ of the endpoints. They can be queried in the following ways
 
 ## Spring Actuator
 
+## 
+# See what endpoints are available
+curl -v http://localhost:8000/actuator | jq
+
 # Get the app status (up or down)
 curl -v localhost:8000/actuator/health
 
@@ -115,6 +121,28 @@ curl -v localhost:8000/actuator/env
 
 ```
 
+Prometheus
+https://g00glen00b.be/monitoring-spring-prometheus-grafana/
+
+docker run -it --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14268:14268 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:1.8
+
+https://micrometer.io/docs/registry/prometheus
+
+Run docker compose, update prometheus.yml
+get localgost IP, outside d compose
+http://localhost:9090/targets
+curl -v http://localhost:8000/actuator/prometheus | jq
+grafana
+curl -v http://localhost:3000/metrics
 
 # Useful Links
 
@@ -139,3 +167,12 @@ https://dzone.com/articles/maven-git-commit-id-plugin
 
 ### Logback
 https://logback.qos.ch/manual/configuration.html
+
+curl -X POST -H "Content-Type: application/json" -d '{
+    "build_parameters": {
+        "RELEASE": "0.0.2-SNAPSHOT",
+        "NEXT": "0.0.3-SNAPSHOT",
+        "GIT_USER_EMAIL": "fergusmacdermot@gmail.com",
+        "GIT_USER_NAME": "Via CircleCI"
+    }
+}' "https://circleci.com/api/v1.1/project/github/mononokehime/demo-app/tree/master?circle-token=ec3c869f05a41b0116d9b3d1d2fe8e93f3d8a38b"
