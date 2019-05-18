@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import com.mononokehime.demo.data.Employee;
 import com.mononokehime.demo.data.EmployeeNotFoundException;
 import com.mononokehime.demo.data.EmployeeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.micrometer.core.annotation.Timed;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +48,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @RestController
+@Slf4j
 class EmployeeController {
-    private static final Logger LOGGER
-            = LoggerFactory.getLogger(EmployeeController.class);
+
     private final EmployeeRepository repository;
 
     private final EmployeeResourceAssembler assembler;
@@ -63,10 +63,9 @@ class EmployeeController {
     }
 
     // Aggregate root
-
     @GetMapping("/employees")
     Resources<Resource<Employee>> all() {
-        LOGGER.debug("********** entered all /employees");
+        log.debug("********** entered all /employees");
         List<Resource<Employee>> employees = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
@@ -75,6 +74,7 @@ class EmployeeController {
                 linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
 
+    @Timed("employees-create")
     @PostMapping("/employees")
     ResponseEntity<?> newEmployee(@RequestBody final Employee newEmployee) throws URISyntaxException {
 
@@ -89,13 +89,14 @@ class EmployeeController {
 
     @GetMapping("/employees/{id}")
     Resource<Employee> one(@PathVariable final Long id) {
-        LOGGER.debug("********* entered one /employees/{id}");
+        log.debug("********* entered one /employees/{id}");
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
 
         return assembler.toResource(employee);
     }
 
+    @Timed("employees-update")
     @PutMapping("/employees/{id}")
     ResponseEntity<?> replaceEmployee(@RequestBody final Employee newEmployee, @PathVariable final Long id) throws URISyntaxException {
 
@@ -117,6 +118,7 @@ class EmployeeController {
                 .body(resource);
     }
 
+    @Timed("employee-delete")
     @DeleteMapping("/employees/{id}")
     ResponseEntity<?> deleteEmployee(@PathVariable final Long id) {
 

@@ -21,9 +21,18 @@ package com.mononokehime.demo;
  */
 
 
+import io.jaegertracing.Configuration;
+
+import io.jaegertracing.internal.JaegerTracer;
+import io.jaegertracing.internal.samplers.ProbabilisticSampler;
+import lombok.extern.slf4j.Slf4j;
+import io.opentracing.Tracer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.client.RestTemplate;
 
 
 /*
@@ -31,8 +40,20 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan("com.mononokehime.demo")
+@Slf4j
 public class DemoApplication {
 
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.build();
+    }
+//    @Bean
+//    public static Tracer getTracer() {
+//        Configuration.SamplerConfiguration samplerConfig = Configuration.SamplerConfiguration.fromEnv().withType("const").withParam(1);
+//        Configuration.ReporterConfiguration reporterConfig = Configuration.ReporterConfiguration.fromEnv().withLogSpans(true);
+//        Configuration config = new Configuration("demo-app").withSampler(samplerConfig).withReporter(reporterConfig);
+//        return config.getTracer();
+//    }
     public static void main(final String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
