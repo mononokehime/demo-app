@@ -1,4 +1,4 @@
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=mononokehime/demo-app)](https://dependabot.com)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=mononokehime/demo-app)](https://dependabot.com) [![CircleCI](https://circleci.com/gh/mononokehime/demo-app/tree/master.svg?style=svg)](https://circleci.com/gh/mononokehime/demo-app/tree/master)
 
 # Demo Project
 This java project is for demonstrating various functionality of Spring Boot and 
