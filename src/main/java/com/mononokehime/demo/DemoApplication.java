@@ -22,11 +22,8 @@ package com.mononokehime.demo;
 
 
 import io.jaegertracing.Configuration;
-
-import io.jaegertracing.internal.JaegerTracer;
-import io.jaegertracing.internal.samplers.ProbabilisticSampler;
-import lombok.extern.slf4j.Slf4j;
 import io.opentracing.Tracer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -42,6 +39,9 @@ import org.springframework.web.client.RestTemplate;
 @ComponentScan("com.mononokehime.demo")
 @Slf4j
 public class DemoApplication {
+
+
+
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {

@@ -3,7 +3,6 @@ server:
 # endpoints are disabled by default
 # management.endpoints.web.exposure.include=prometheus
 # management.metrics.tags.application=${spring.application.name}
-# Disable lazy loading for this app
 spring:
   jpa:
     open-in-view: false
@@ -13,10 +12,10 @@ opentracing:
   jaeger:
     log-spans: true
     service-name: demo-app-j
-    enabled: true
 jaeger:
   service:
      name: demo-app-j
+     enabled: true
 management:
   info:
     git:

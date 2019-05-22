@@ -51,6 +51,9 @@ mvn clean install
 mvn site install -P reporting
 ```
 
+# Docker build
+mvn clean package dockerfile:build
+
 # Running and Testing
 To run the project and test the responses
 ```bash
@@ -121,8 +124,12 @@ curl -v localhost:8000/actuator/env
 
 ```
 
+
+curl -v http://demoapp:8000/chaining-employee
 Prometheus
 https://g00glen00b.be/monitoring-spring-prometheus-grafana/
+
+minikube start --memory 8192
 
 docker run -it --name jaeger \
   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
@@ -136,6 +143,15 @@ docker run -it --name jaeger \
   jaegertracing/all-in-one:1.8
 
 https://micrometer.io/docs/registry/prometheus
+
+https://github.com/jaegertracing/jaeger-client-java/tree/master/jaeger-core
+
+kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl productpage:9080/productpage | grep -o "<title>.*</title>"
+
+kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl -v http://demoapp:8000/employees
+
+side car
+https://medium.com/@masroor.hasan/tracing-infrastructure-with-jaeger-on-kubernetes-6800132a677
 
 Run docker compose, update prometheus.yml
 get localgost IP, outside d compose

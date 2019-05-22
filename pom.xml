@@ -38,8 +38,8 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:ssh://git@github.com:mononokehime/spring-boot-docker.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:mononokehime/spring-boot-docker.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com:mononokehime/demo-app.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:mononokehime/demo-app.git</developerConnection>
     <tag>HEAD</tag>
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
@@ -81,6 +81,7 @@
     <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
     <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+    <version.jaeger>0.27.0</version.jaeger>
   </properties>
   <!-- unused in this project
     <issueManagement>
@@ -123,6 +124,11 @@
       <artifactId>opentracing-spring-cloud-starter</artifactId>
       <version>0.3.1</version>
     </dependency>
+    <!--<dependency>-->
+    <!--<groupId>io.jaegertracing</groupId>-->
+    <!--<artifactId>jaeger-core</artifactId>-->
+    <!--<version>${version.jaeger}</version>-->
+    <!--</dependency>-->
     <!-- jaeger tracing
     https://github.com/opentracing-contrib/java-spring-jaeger
     -->
@@ -131,7 +137,6 @@
       <artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>
       <version>2.0.0</version>
     </dependency>
-
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -376,6 +381,7 @@
           </execution>
         </executions>
       </plugin>
+      <!-- https://github.com/spotify/docker-maven-plugin -->
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
@@ -461,6 +467,7 @@
           <excludes>
             <exclude>**/*DemoApplication.*</exclude>
             <exclude>com/mononokehime/demo/data/*</exclude>
+            <exclude>com/mononokehime/demo/config/*</exclude>
           </excludes>
         </configuration>
       </plugin>

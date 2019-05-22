@@ -8,3 +8,4 @@
  :: Built with java version ::  @java.version@
  :: Project Build Version ::    @project.version@
  :: Project Description ::      @project.description@
+ :: Spring application name ::  ${spring.application.name}
