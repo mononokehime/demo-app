@@ -183,12 +183,3 @@ https://dzone.com/articles/maven-git-commit-id-plugin
 
 ### Logback
 https://logback.qos.ch/manual/configuration.html
-
-curl -X POST -H "Content-Type: application/json" -d '{
-    "build_parameters": {
-        "RELEASE": "0.0.2-SNAPSHOT",
-        "NEXT": "0.0.3-SNAPSHOT",
-        "GIT_USER_EMAIL": "fergusmacdermot@gmail.com",
-        "GIT_USER_NAME": "Via CircleCI"
-    }
-}' "https://circleci.com/api/v1.1/project/github/mononokehime/demo-app/tree/master?circle-token=ec3c869f05a41b0116d9b3d1d2fe8e93f3d8a38b"
