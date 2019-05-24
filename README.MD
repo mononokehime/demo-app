@@ -174,6 +174,14 @@ the incoming request, the re-direct and then the DB query.
 * If you run docker containers standalone, the application.yml uses jaeger as the host name, as per the container name
 
 
+# Updating the alpine image
+Run the following commands inside the demo-app container
+```bash
+apk add busybox-extras
+apk add -u busybox
+```
+
+
 
 Prometheus
 https://g00glen00b.be/monitoring-spring-prometheus-grafana/
