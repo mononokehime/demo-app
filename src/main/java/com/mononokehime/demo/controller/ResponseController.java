@@ -51,6 +51,16 @@ public class ResponseController {
             = LoggerFactory.getLogger(ResponseController.class);
     public static final String VERSION = "1.0";
 
+    @GetMapping("/print-caller-address")
+    public final ResponseEntity<String>  getCallerAddress(final HttpServletRequest request) {
+        if (request.getHeader("X-Forwarded-For") != null) {
+            return new ResponseEntity<>(
+                    request.getHeader("X-Forwarded-For"),  HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(
+                    request.getRemoteAddr(),  HttpStatus.OK);
+        }
+    }
 
     @GetMapping("/headers")
     public final ResponseEntity<String> customHeader(final HttpServletRequest request, @RequestHeader final HttpHeaders headers) throws SocketException {
