@@ -11,11 +11,7 @@ spring:
 opentracing:
   jaeger:
     log-spans: true
-    service-name: demo-app-j
-jaeger:
-  service:
-     name: demo-app-j
-     enabled: true
+    service-name: demo-app
 management:
   info:
     git:

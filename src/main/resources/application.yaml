@@ -12,11 +12,10 @@ spring:
 opentracing:
   jaeger:
     log-spans: true
-    service-name: demo-app-j
+    service-name: demo-app
     enabled: true
-jaeger:
-  service:
-     name: demo-app-j
+    udp-sender:
+       host: "jaeger"
 management:
   info:
     git:
