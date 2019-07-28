@@ -82,6 +82,7 @@
     <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     <version.jaeger>0.27.0</version.jaeger>
+    <spring-cloud-starter-vault-config.version>2.1.2.RELEASE</spring-cloud-starter-vault-config.version>
   </properties>
   <!-- unused in this project
     <issueManagement>
@@ -115,6 +116,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-vault-config</artifactId>
+      <version>${spring-cloud-starter-vault-config.version}</version>
     </dependency>
     <!-- opentracing from spring cloud
      https://github.com/opentracing-contrib/java-spring-cloud

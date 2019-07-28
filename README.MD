@@ -12,7 +12,7 @@ You will need the following installed:
 * Maven 3+
 * lombox plugin if using Intellij
 
-# Spring Boot Features
+## Spring Boot Features
 The spring boot features leveraged are:
 * RestControllers with persistence in H2
 * Generated Swagger UI
@@ -22,7 +22,7 @@ The spring boot features leveraged are:
 * Spring Actuator
 * Jaeger Tracing, with root span
 
-# Maven Features
+## Maven Features
 For details see the pom.xml. The maven features leveraged are:
 * Site generation
 * License management, and license header updates with The Apache Software License, Version 2.0
@@ -44,7 +44,7 @@ For details see the pom.xml. The maven features leveraged are:
     14. Licenses - third party license list
 * Release Management
  
-# Building
+## Building
 The project can be built with the following targets
 ```bash
 mvn clean install
@@ -52,10 +52,10 @@ mvn clean install
 mvn site install -P reporting
 ```
 
-# Docker build
+## Docker build
 mvn clean package dockerfile:build
 
-# Running and Testing
+## Running and Testing
 To run the project and test the responses
 ```bash
 # Start the server
@@ -98,7 +98,7 @@ curl -v localhost:8000/v2/api-docs | jq
 
 To view the swagger UI go to http://localhost:8000/swagger-ui.html
 
-# Spring Actuator V2
+## Spring Actuator V2
 Spring actuator v2 disables most endpoints by default. The application.yaml overrides some 
 of the endpoints. They can be queried in the following ways
 ```bash
@@ -127,8 +127,26 @@ curl http://localhost:8000/actuator/beans -i -X GET
 curl -v localhost:8000/actuator/env
 
 ```
+## Spring Cloud Vault Integration
+This assumes Vault is running with the following
+APP_NAME=test
+Mount path: `applications/${APP_NAME}/approle`
+Role name: `${APP_NAME}-ro`
+Role access rights: 
+            `applications/${APP_NAME}/approle/login` create for login
+            `applications/${APP_NAME/*` read for secrets
+Policy name: `${APP_NAME}-application-ro`
+Vault with key value 
+```sh
+vault kv put applications/${APP_NAME}/secrets/api-key fake-key=fake-key-value-vault
+Success! Data written to: applications/${APP_NAME}/secrets/api-key
+```
+Start this way
+```sh
+mvn clean spring-boot:run -Dspring.cloud.vault.enabled=true
+```
 
-# Jaeger Distributed Tracing
+## Jaeger Distributed Tracing
 This is turned on with the following dependencies
 ```bash
 #     https://github.com/opentracing-contrib/java-spring-cloud
@@ -147,14 +165,14 @@ This is turned on with the following dependencies
       <version>2.0.0</version>
     </dependency>
 ```
-## Jaeger with Docker compose
+### Jaeger with Docker compose
 Start the server up in docker-compose with the jaeger agents:
 ```bash
 
 docker-compose -f docker-compose-jaeger.yml up
 ```
 
-## Jaeger with Docker
+### Jaeger with Docker
 If you want to go old school you can run the app and Jaeger standalone like this
  ```bash
 # Create a local network, check what is there
@@ -177,40 +195,14 @@ the incoming request, the re-direct and then the DB query.
 * If you run docker containers standalone, the application.yml uses jaeger as the host name, as per the container name
 
 
-# Updating the alpine image
+## Updating the alpine image
 Run the following commands inside the demo-app container
 ```bash
 apk add busybox-extras
 apk add -u busybox
 ```
 
-
-
-Prometheus
-https://g00glen00b.be/monitoring-spring-prometheus-grafana/
-
-
-
-
-https://micrometer.io/docs/registry/prometheus
-
-https://github.com/jaegertracing/jaeger-client-java/tree/master/jaeger-core
-
-kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl productpage:9080/productpage | grep -o "<title>.*</title>"
-
-kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}') -c ratings -- curl -v http://demoapp:8000/employees
-
-side car
-https://medium.com/@masroor.hasan/tracing-infrastructure-with-jaeger-on-kubernetes-6800132a677
-
-Run docker compose, update prometheus.yml
-get localgost IP, outside d compose
-http://localhost:9090/targets
-curl -v http://localhost:8000/actuator/prometheus | jq
-grafana
-curl -v http://localhost:3000/metrics
-
-# Useful Links
+## Useful Links
 
 ### The code this is based on
 https://spring.io/guides/tutorials/rest/

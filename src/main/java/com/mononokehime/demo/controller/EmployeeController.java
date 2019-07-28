@@ -32,6 +32,8 @@ import com.mononokehime.demo.data.EmployeeNotFoundException;
 import com.mononokehime.demo.data.EmployeeRepository;
 import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,11 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Slf4j
 class EmployeeController {
 
+    @Autowired
+    Environment env;
+    public String getGoogleKey() {
+        return env.getProperty("fake-key");
+    }
     private final EmployeeRepository repository;
 
     private final EmployeeResourceAssembler assembler;
@@ -65,7 +72,7 @@ class EmployeeController {
     // Aggregate root
     @GetMapping("/employees")
     Resources<Resource<Employee>> all() {
-        log.debug("********** entered all /employees");
+        log.debug("********** entered all /employees" +getGoogleKey());
         List<Resource<Employee>> employees = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
@@ -79,7 +86,6 @@ class EmployeeController {
     ResponseEntity<?> newEmployee(@RequestBody final Employee newEmployee) throws URISyntaxException {
 
         Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
-
         return ResponseEntity
                 .created(new URI(resource.getId().expand().getHref()))
                 .body(resource);

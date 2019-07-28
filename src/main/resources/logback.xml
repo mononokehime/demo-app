@@ -27,10 +27,34 @@
         </encoder>
     </appender>
     <!-- configure request logging -->
+    o.s.b.c.l.ClasspathLoggingApplicationListener
     <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
         <level value="DEBUG" />
     </logger>
-
+    <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.springframework.cloud.context.scope.GenericScope">
+        <level value="INFO" />
+    </logger>
+    <logger name="com.zaxxer.hikari.HikariConfig">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.hibernate">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.hibernate.cfg.Settings">
+        <level value="INFO" />
+    </logger>
+    <logger name="org.hibernate.internal.SessionFactoryImpls">
+        <level value="INFO" />
+    </logger>
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>

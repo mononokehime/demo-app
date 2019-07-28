@@ -13,7 +13,7 @@ opentracing:
   jaeger:
     log-spans: true
     service-name: demo-app
-    enabled: true
+    enabled: false
     udp-sender:
        host: "jaeger"
 management:
@@ -43,3 +43,4 @@ management:
       enabled: true
     env:
       enabled: true
+fake-key: my-properties-google-key
