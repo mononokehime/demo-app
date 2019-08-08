@@ -54,7 +54,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 class EmployeeController {
 
     @Autowired
-    Environment env;
+    private Environment env;
+
     public String getGoogleKey() {
         return env.getProperty("fake-key");
     }
@@ -72,7 +73,7 @@ class EmployeeController {
     // Aggregate root
     @GetMapping("/employees")
     Resources<Resource<Employee>> all() {
-        log.debug("********** entered all /employees" +getGoogleKey());
+        log.debug("********** entered all /employees" + getGoogleKey());
         List<Resource<Employee>> employees = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
