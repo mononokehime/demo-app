@@ -57,7 +57,7 @@
     <checkstyle.configLocation>sun_checks.xml</checkstyle.configLocation>
     <docker.image.prefix>mononoke</docker.image.prefix>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-    <dependency-check-maven.version>5.2.0</dependency-check-maven.version>
+    <dependency-check-maven.version>5.2.1</dependency-check-maven.version>
     <distributionManagement.url>s3://maven.fergusmac.com</distributionManagement.url>
     <git-commit-id-plugin.version>3.0.0</git-commit-id-plugin.version>
     <gitlog-maven-plugin.version>1.13.17</gitlog-maven-plugin.version>
