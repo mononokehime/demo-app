@@ -65,7 +65,7 @@ public class ResponseController {
     @GetMapping("/headers")
     public final ResponseEntity<String> customHeader(final HttpServletRequest request, @RequestHeader final HttpHeaders headers) throws SocketException {
         final String response = httpServletRequestToString(request, headers);
-//        return new Resource(response,
+//        return new EntityModel(response,
 //                linkTo(methodOn(ResponseController.class).customHeader(request, headers)).withSelfRel());
 
         return new ResponseEntity<>(
