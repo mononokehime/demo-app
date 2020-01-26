@@ -25,20 +25,20 @@ package com.mononokehime.demo.controller;
 
 
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.mononokehime.demo.data.Employee;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 @Component
-final class EmployeeResourceAssembler implements ResourceAssembler<Employee, Resource<Employee>> {
+final class EmployeeResourceAssembler implements RepresentationModelAssembler<Employee, EntityModel<Employee>> {
 
     @Override
-    public Resource<Employee> toResource(final Employee employee) {
+    public EntityModel<Employee> toModel(final Employee employee) {
 
-        return new Resource<>(employee,
+        return new EntityModel<>(employee,
                 linkTo(methodOn(EmployeeController.class).one(employee.getId())).withSelfRel(),
                 linkTo(methodOn(EmployeeController.class).all()).withRel("employees"));
     }

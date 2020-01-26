@@ -34,8 +34,9 @@ import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +46,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -72,13 +73,13 @@ class EmployeeController {
 
     // Aggregate root
     @GetMapping("/employees")
-    Resources<Resource<Employee>> all() {
+    CollectionModel<EntityModel<Employee>> all() {
         log.debug("********** entered all /employees" + getGoogleKey());
-        List<Resource<Employee>> employees = repository.findAll().stream()
-                .map(assembler::toResource)
+        List<EntityModel<Employee>> employees = repository.findAll().stream()
+                .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return new Resources<>(employees,
+        return new CollectionModel<>(employees,
                 linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
 
@@ -86,21 +87,23 @@ class EmployeeController {
     @PostMapping("/employees")
     ResponseEntity<?> newEmployee(@RequestBody final Employee newEmployee) throws URISyntaxException {
 
-        Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
+        EntityModel<Employee> resource = assembler.toModel(repository.save(newEmployee));
         return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
+                .created(new URI(resource.getLink("/").get().getHref()))
                 .body(resource);
     }
 
     // Single item
 
     @GetMapping("/employees/{id}")
-    Resource<Employee> one(@PathVariable final Long id) {
+    EntityModel<Employee> one(@PathVariable final Long id) {
         log.debug("********* entered one /employees/{id}");
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        return assembler.toResource(employee);
+        Link link = linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel();
+        employee.add(link);
+        return assembler.toModel(employee);
     }
 
     @Timed("employees-update")
@@ -118,10 +121,10 @@ class EmployeeController {
                     return repository.save(newEmployee);
                 });
 
-        Resource<Employee> resource = assembler.toResource(updatedEmployee);
-
+        EntityModel<Employee> resource = assembler.toModel(updatedEmployee);
+        Link link = linkTo(Employee.class).slash(resource.getLink("/").get()).withSelfRel();
         return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
+                .created(new URI(resource.getLink("/").get().getHref()))
                 .body(resource);
     }
 

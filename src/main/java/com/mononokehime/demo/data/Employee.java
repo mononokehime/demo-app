@@ -23,13 +23,20 @@ package com.mononokehime.demo.data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @Entity
-public class Employee {
-    public Employee() {
-    }
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Employee extends RepresentationModel<Employee> {
 
     private @Id
     @GeneratedValue

@@ -22,8 +22,8 @@ package com.mononokehime.demo.controller;
 
 import com.mononokehime.demo.data.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,9 +44,9 @@ class ChainController {
         return "Chaining + " + response.getBody();
     }
     @RequestMapping("/chaining-employee")
-    public Resources<Resource<Employee>> chainEmployees() {
-        return restTemplate.getForObject("http://localhost:8000/employees", Resources.class);
-      //  ResponseEntity<Resources> response = restTemplate.getForEntity("http://localhost:8000/employees", Resources.class);
+    public CollectionModel<EntityModel<Employee>> chainEmployees() {
+        return restTemplate.getForObject("http://localhost:8000/employees", CollectionModel.class);
+      //  ResponseEntity<CollectionModel> response = restTemplate.getForEntity("http://localhost:8000/employees", CollectionModel.class);
 
     }
 }

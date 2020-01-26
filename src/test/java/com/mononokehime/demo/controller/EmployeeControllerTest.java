@@ -36,8 +36,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
@@ -57,8 +57,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -120,7 +120,7 @@ public class EmployeeControllerTest {
     @DirtiesContext
     public void createEmployee_whenCreateOne_thenReturnJsonArray()
             throws Exception {
-        Employee employee = new Employee();
+        Employee employee = new Employee("Sam", "Gangee", "ring bearer");
         employee.setFirstName("Sam");
         employee.setLastName("Gangee");
         employee.setRole("ring bearer");
@@ -142,10 +142,7 @@ public class EmployeeControllerTest {
     @DirtiesContext
     public void updateEmployee_whenUpdateOne_thenReturnJsonArray()
             throws Exception {
-        Employee employee = new Employee();
-        employee.setFirstName("Bilbo");
-        employee.setLastName("Baggins");
-        employee.setRole("ex ring bearer");
+        Employee employee = new Employee("Bilbo", "Baggins", "ex ring bearer");
         String json = mapper.writeValueAsString(employee);
         MvcResult result = mvc.perform(put("/employees/1")
                 .content(json)
@@ -163,7 +160,7 @@ public class EmployeeControllerTest {
     @Test
     public void updateEmployee_whenUpdateOne_thenThrowNotAllowed()
             throws Exception {
-        Employee employee = new Employee();
+        Employee employee = new Employee("Bilbo", "Baggins", "ex ring bearer");
         employee.setFirstName("Bilbo");
         employee.setLastName("Baggins");
         employee.setRole("ex ring bearer");
