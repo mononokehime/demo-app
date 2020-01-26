@@ -37,6 +37,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,10 +63,10 @@ class EmployeeController {
     }
     private final EmployeeRepository repository;
 
-    private final EmployeeResourceAssembler assembler;
+    private final EmployeeModelAssembler assembler;
 
     EmployeeController(final EmployeeRepository repository,
-                       final EmployeeResourceAssembler assembler) {
+                       final EmployeeModelAssembler assembler) {
 
         this.repository = repository;
         this.assembler = assembler;
@@ -88,8 +89,10 @@ class EmployeeController {
     ResponseEntity<?> newEmployee(@RequestBody final Employee newEmployee) throws URISyntaxException {
 
         EntityModel<Employee> resource = assembler.toModel(repository.save(newEmployee));
+        //resource.getLink("employees").toString()
+        Link link = linkTo(EmployeeController.class).slash(newEmployee.getId()).withSelfRel().withRel("employees");
         return ResponseEntity
-                .created(new URI(resource.getLink("/").get().getHref()))
+                .created(new URI(link.getHref()))
                 .body(resource);
     }
 
@@ -101,8 +104,6 @@ class EmployeeController {
         Employee employee = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        Link link = linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel();
-        employee.add(link);
         return assembler.toModel(employee);
     }
 
@@ -122,9 +123,9 @@ class EmployeeController {
                 });
 
         EntityModel<Employee> resource = assembler.toModel(updatedEmployee);
-        Link link = linkTo(Employee.class).slash(resource.getLink("/").get()).withSelfRel();
+        Link link = linkTo(EmployeeController.class).slash(newEmployee.getId()).withSelfRel().withRel("employees");
         return ResponseEntity
-                .created(new URI(resource.getLink("/").get().getHref()))
+                .created(new URI(link.getHref()))
                 .body(resource);
     }
 

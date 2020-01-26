@@ -24,41 +24,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mononokehime.demo.DemoApplication;
 import com.mononokehime.demo.data.Employee;
 import com.mononokehime.demo.data.EmployeeRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,7 +60,7 @@ public class EmployeeControllerTest {
     private EmployeeRepository repository;
 
     @Autowired
-    private EmployeeResourceAssembler assembler;
+    private EmployeeModelAssembler assembler;
 
     @Autowired
     private ObjectMapper mapper;
@@ -89,7 +72,7 @@ public class EmployeeControllerTest {
         MvcResult result = mvc.perform(get("/employees")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.employeeList", hasSize(2)))
+                .andExpect(jsonPath("$._embedded.employees", hasSize(2)))
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/employees"))).andReturn();
 
        // String content = result.getResponse().getContentAsString();
@@ -121,9 +104,6 @@ public class EmployeeControllerTest {
     public void createEmployee_whenCreateOne_thenReturnJsonArray()
             throws Exception {
         Employee employee = new Employee("Sam", "Gangee", "ring bearer");
-        employee.setFirstName("Sam");
-        employee.setLastName("Gangee");
-        employee.setRole("ring bearer");
         String json = mapper.writeValueAsString(employee);
         MvcResult result = mvc.perform(post("/employees")
                 .content(json)
@@ -161,9 +141,6 @@ public class EmployeeControllerTest {
     public void updateEmployee_whenUpdateOne_thenThrowNotAllowed()
             throws Exception {
         Employee employee = new Employee("Bilbo", "Baggins", "ex ring bearer");
-        employee.setFirstName("Bilbo");
-        employee.setLastName("Baggins");
-        employee.setRole("ex ring bearer");
         String json = mapper.writeValueAsString(employee);
         MvcResult result = mvc.perform(post("/employees/1")
                 .content(json)
