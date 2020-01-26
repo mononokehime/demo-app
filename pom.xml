@@ -43,13 +43,6 @@
     <tag>HEAD</tag>
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
-    <repositories>
-        <repository>
-            <id>jcenter-snapshots</id>
-            <name>jcenter</name>
-            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-        </repository>
-    </repositories>
   <distributionManagement>
     <repository>
       <id>maven.fergusmac.com</id>
@@ -202,6 +195,13 @@
       <version>${micrometer.version}</version>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>jcenter-snapshots</id>
+      <name>jcenter</name>
+      <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+    </repository>
+  </repositories>
   <build>
     <extensions>
       <extension>
