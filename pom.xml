@@ -43,6 +43,13 @@
     <tag>HEAD</tag>
     <url>https://github.com/mononokehime/demo-app</url>
   </scm>
+    <repositories>
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+        </repository>
+    </repositories>
   <distributionManagement>
     <repository>
       <id>maven.fergusmac.com</id>
@@ -81,6 +88,7 @@
     <sortpom-maven-plugin.version>2.10.0</sortpom-maven-plugin.version>
     <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+    <springfox-swagger2-snapshot.version>3.0.0-SNAPSHOT</springfox-swagger2-snapshot.version>
     <version.jaeger>0.27.0</version.jaeger>
     <spring-cloud-starter-vault-config.version>2.2.1.RELEASE</spring-cloud-starter-vault-config.version>
   </properties>
@@ -94,12 +102,27 @@
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
-      <version>${springfox-swagger2.version}</version>
+      <version>${springfox-swagger2-snapshot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-data-rest</artifactId>
+      <version>${springfox-swagger2-snapshot.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger-ui</artifactId>
       <version>${springfox-swagger2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spring-web</artifactId>
+      <version>${springfox-swagger2-snapshot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spring-webmvc</artifactId>
+      <version>${springfox-swagger2-snapshot.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
