@@ -20,21 +20,10 @@ package com.mononokehime.demo;
  * #L%
  */
 
-
-
-
-
-
-
-import java.util.Collections;
-
-import com.google.common.base.Predicate;
 import com.mononokehime.demo.controller.ResponseController;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -44,6 +33,7 @@ import springfox.documentation.spring.data.rest.configuration.SpringDataRestConf
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
+import java.util.Collections;
 
 /*
  * https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
@@ -56,8 +46,8 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis( RequestHandlerSelectors.any())
-                .paths( PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.mononokehime.demo.controller"))
+                .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
     }
