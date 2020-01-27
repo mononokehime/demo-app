@@ -85,7 +85,7 @@ curl -v -X DELETE localhost:8000/employees/3
 curl -H "Accept-Charset: utf-8" -v localhost:8000/headers
 
 # Get caller address
-curl -H "Accept-Charset: utf-8" -v localhost:8000/print-caller-address"
+curl -H "Accept-Charset: utf-8" -v localhost:8000/print-caller-address
 
 # See version info - from git.properties
 curl -v localhost:8000/version

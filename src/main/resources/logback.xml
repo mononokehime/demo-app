@@ -43,6 +43,9 @@
     <logger name="org.springframework.cloud.context.scope.GenericScope">
         <level value="INFO" />
     </logger>
+    <logger name="springfox.documentation">
+        <level value="INFO" />
+    </logger>
     <logger name="com.zaxxer.hikari.HikariConfig">
         <level value="INFO" />
     </logger>
