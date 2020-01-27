@@ -83,7 +83,7 @@ class EmployeeController {
 
     @Timed("employees-create")
     @PostMapping("/employees")
-    ResponseEntity<?> newEmployee(@Valid @RequestBody final Employee newEmployee ) throws URISyntaxException {
+    ResponseEntity<?> newEmployee(@Valid @RequestBody final Employee newEmployee) throws URISyntaxException {
 
         EntityModel<Employee> resource = assembler.toModel(repository.save(newEmployee));
         //resource.getLink("employees").toString()
@@ -136,8 +136,7 @@ class EmployeeController {
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public Map<String, String> handleValidationExceptions(final MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
