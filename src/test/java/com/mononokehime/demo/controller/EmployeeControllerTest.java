@@ -22,8 +22,11 @@ package com.mononokehime.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mononokehime.demo.DemoApplication;
+import com.mononokehime.demo.config.CustomMessageSourceConfiguration;
 import com.mononokehime.demo.data.Employee;
 import com.mononokehime.demo.data.EmployeeRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +35,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.nio.charset.Charset;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
@@ -51,6 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = DemoApplication.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
+@Slf4j
 public class EmployeeControllerTest {
 
     @Autowired
@@ -64,6 +71,9 @@ public class EmployeeControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Autowired
+    private CustomMessageSourceConfiguration messageSource;
 
     @Test
     public void givenEmployees_whenAll_thenReturnJsonArray()
@@ -101,13 +111,38 @@ public class EmployeeControllerTest {
 
     @Test
     @DirtiesContext
+    public void createEmployee_whenCreateOneNoName_thenReturnError()
+            throws Exception {
+        MediaType textPlainUtf8 = new MediaType(MediaType.APPLICATION_JSON, Charset.forName("UTF-8"));
+        Employee employee = new Employee("", "Gangee", "ring bearer");
+        String json = mapper.writeValueAsString(employee);
+        MvcResult result = mvc.perform(post("/employees")
+                .content(json)
+                .contentType(textPlainUtf8))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.firstName", Is.is("Name should have at least 2 characters")))
+                .andReturn();
+
+//      .andExpect(MockMvcResultMatchers.status().isBadRequest())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Is.is("Name is mandatory")))
+//                .andExpect(MockMvcResultMatchers.content()
+//                        .contentType(MediaType.APPLICATION_JSON_UTF8));
+        log.error("************* entered one /employees/"+result);
+        log.error("************* entered one /employees/"+result.getResponse().getErrorMessage());
+        System.out.print("result:"+result);
+
+    }
+
+    @Test
+    @DirtiesContext
     public void createEmployee_whenCreateOne_thenReturnJsonArray()
             throws Exception {
+        MediaType textPlainUtf8 = new MediaType(MediaType.APPLICATION_JSON, Charset.forName("UTF-8"));
         Employee employee = new Employee("Sam", "Gangee", "ring bearer");
         String json = mapper.writeValueAsString(employee);
         MvcResult result = mvc.perform(post("/employees")
                 .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(textPlainUtf8))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
                 .andExpect(jsonPath("$.lastName", is(employee.getLastName())))

@@ -215,12 +215,15 @@ https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test
 https://www.baeldung.com/spring-boot-app-as-a-service
 Hateoas examples
 https://github.com/spring-projects/spring-hateoas-examples
+Swagger config
+https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
 Actuator
 https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/
 https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-enabling-endpoints
 https://www.baeldung.com/spring-boot-actuators
 Git commit plugin
 https://dzone.com/articles/maven-git-commit-id-plugin
+[Spring Boot Validation](https://www.baeldung.com/spring-boot-bean-validation)
 
 
 ### Logback
