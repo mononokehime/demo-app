@@ -83,7 +83,7 @@
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     <springfox-swagger2-snapshot.version>3.0.0-SNAPSHOT</springfox-swagger2-snapshot.version>
     <version.jaeger>0.27.0</version.jaeger>
-    <spring-cloud-starter-vault-config.version>2.2.3.RELEASE</spring-cloud-starter-vault-config.version>
+    <spring-cloud-starter-vault-config.version>3.0.2</spring-cloud-starter-vault-config.version>
   </properties>
   <!-- unused in this project
     <issueManagement>
