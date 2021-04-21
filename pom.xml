@@ -78,7 +78,7 @@
     <maven-s3-wagon.version>1.2.0</maven-s3-wagon.version>
     <micrometer.version>1.5.1</micrometer.version>
     <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-    <sortpom-maven-plugin.version>2.11.0</sortpom-maven-plugin.version>
+    <sortpom-maven-plugin.version>3.0.0</sortpom-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.0.0</spotbugs-maven-plugin.version>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     <springfox-swagger2-snapshot.version>3.0.0-SNAPSHOT</springfox-swagger2-snapshot.version>
